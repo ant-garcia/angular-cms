@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-var schema = mongoose.Schema;
-var page = new schema({
+var Schema = mongoose.Schema;
+var Page = new Schema({
 	title: String,
 	url: {type: String, index: {unique: true}},
 	content: String,
@@ -8,5 +8,5 @@ var page = new schema({
 	data: Date 
 });
 
-var page = mongoose.model('page', page);
-module.exports = page;
+var Page = mongoose.model('Page', Page);
+module.exports = Page;
