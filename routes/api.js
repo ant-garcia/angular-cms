@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var page = require('../models/page.js');
-var admin = require('../models/admin.js');
+var user = require('../models/user.js');
 
 /*User Routes*/
 
@@ -67,7 +67,7 @@ router.get('/pages/delete/:id', sessionCheck, function(request, response){
 	return response.send('Page id: ' + id + ' has been deleted');
 });
 
-router.get('/pages/admin/:id', sessionCheck, function(request, response){
+router.get('/pages/user/:id', sessionCheck, function(request, response){
 	var id = request.params.id;
 
 	page.findOne({
@@ -97,7 +97,7 @@ router.post('/addUser', function(request, response){
 	var password = request.body.password;
 	var salt = bcrypt.genSaltSync(10);
 	var hash = bcrypt.hashSync(password, salt);
-	var admin = new Admin({
+	var user = new User({
 		username: request.body.username,
 		password: hash
 	});
