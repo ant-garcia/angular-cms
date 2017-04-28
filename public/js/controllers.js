@@ -43,7 +43,7 @@ angular.module('myApp.controllers', [])
 
 			if($scope.pageContent._id !== 0){
 				$scope.heading = 'Update Page';
-				pagesFactory.getAdminPageContent($scope.pageContent._id).then(
+				pagesFactory.getUserPageContent($scope.pageContent._id).then(
 					function(response){
 						$scope.pageContent = response.data;
 						$log.info($scope.pageContent);
@@ -63,4 +63,42 @@ angular.module('myApp.controllers', [])
 						$log.error('error occured while saving data');
 					});
 			};
+
+			$scope.updateURL = function(){
+				$scope.pageContent.url = $filter('formatURL')($scope.pageContent.title);
+			};
+		}])
+	.controller('appController', ['$scope', 'AuthService', 'flashMessageService', '$location',
+		function($scope, AuthService, flashMessageService, location){
+			$scope.site = {
+				logo: 'img/angular-cms-logo.ico',
+				footer: 'Copyright 2017 Angular CMS'
+			};
+			$scope.logout = function(){
+				AuthService.logout().then(
+					function(){
+						$location.path('/user/login');
+						flashMessageService.setMessage('Log Out Successful');
+					},
+					function(error){
+						console.log('An error occured while trying to log out');
+					});
+			};
+		}])
+	.controller('pageController', ['$scope', 'pagesFactory', '$routeParams', '$sce',
+		function($scope, pagesFactory, $routeParams, $sce){
+			var url = $routeParams.url;
+
+			if(!url)
+				url = 'home';
+
+			pagesFactory.getPageContent(url).then(
+				function(response){
+					$scope.pageContent = {};
+					$scope.pageContent.title = response.data.title;
+					$scope.pageContent.content = $sce.trustAsHtml(response.data.content);
+				},
+				function(){
+					console.log('An error has occured while fetching data')
+				});
 		}]);
