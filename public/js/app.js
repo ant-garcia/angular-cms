@@ -7,7 +7,10 @@ angular.module('myApp', [
 	'myApp.filters',
 	'myApp.services',
 	'myApp.directives',
-	'myApp.controllers'
+	'myApp.controllers',
+	'ui.tinymce',
+	'ngCookies',
+	'message.flash'
 ])
 	.config(['$routeProvider', '$locationProvider',
 		function($routeProvider, $locationProvider) {
@@ -23,6 +26,16 @@ angular.module('myApp', [
 				templateUrl: 'partials/user/add-edit-page.html',
 				controller: 'addEditPageController'
 			});
+			$routeProvider.when('/:url', {
+				templateUrl: 'partials/page.html',
+				controller: 'pageController'
+			})
+			$routeProvider.otherwise({
+				redirectTo: '/home'
+			});
 			$locationProvider.html5Mode(true);
 		},
-	]);
+	])
+	.config(function($httpProvider){
+		$httpProvider.interceptors.push('myHttpInterceptor');
+	});
